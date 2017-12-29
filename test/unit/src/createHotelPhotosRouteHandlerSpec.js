@@ -16,16 +16,19 @@ describe('createHotelPhotosRouteHandler', () => {
             body: ''
         }
     };
-    const findOneSpy = sinon.spy();
+
+    const findOneStub = sinon.stub().resolves({ // (1)
+        photos: [ 'photo-1.jpg', 'photo-2.jpg', 'photo-3.jpg' ]
+    });
     const connectedClientDouble = {
-        collection: sinon.stub().returns({ // (2)
-            findOne: findOneSpy
+        collection: sinon.stub().returns({
+            findOne: findOneStub
         })
     };
 
     beforeEach(() => {
-        connectedClientDouble.collection.resetHistory(); // (3)
-        findOneSpy.reset();
+        connectedClientDouble.collection.resetHistory();
+        findOneStub.resetHistory();
 
         ctxDouble.response.status = 0;
         ctxDouble.response.body = '';
@@ -53,20 +56,21 @@ describe('createHotelPhotosRouteHandler', () => {
 
             routeHandler(ctxDouble);
 
-            expect(findOneSpy)
+            expect(findOneStub)
                 .to.have.been.calledWithExactly({ hotelId: 'hotelId' })
                 .to.have.been.calledOnce;
         });
 
-        it('should return hotel photos collection', () => { // (3)
+        it('should return hotel photos collection', () => {
             const routeHandler = createHotelPhotosRouteHandler(connectedClientDouble, collectionName);
 
-            routeHandler(ctxDouble); // (4)
-
-            expect(ctxDouble.response.status).to.equal(200);
-            expect(ctxDouble.response.body).to.deep.equal([
-                'photo-1.jpg', 'photo-2.jpg', 'photo-3.jpg'
-            ]);
+            return routeHandler(ctxDouble) // (2)
+                .then(() => {
+                    expect(ctxDouble.response.status).to.equal(200);
+                    expect(ctxDouble.response.body).to.deep.equal([
+                        'photo-1.jpg', 'photo-2.jpg', 'photo-3.jpg'
+                    ]);
+                });
         });
     });
 });
