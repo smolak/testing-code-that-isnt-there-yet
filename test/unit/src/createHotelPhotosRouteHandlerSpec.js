@@ -61,6 +61,25 @@ describe('createHotelPhotosRouteHandler', () => {
                 .to.have.been.calledOnce;
         });
 
+        context('if hotel entity is not found', () => {
+            it('should return 404 status', () => {
+                const connectedClientDoubleWithNoHotelEntity = { // (1)
+                    collection: sinon.stub().returns({
+                        findOne: sinon.stub().resolves(null)
+                    })
+                };
+                const routeHandler = createHotelPhotosRouteHandler(
+                    connectedClientDoubleWithNoHotelEntity,
+                    collectionName
+                );
+
+                return routeHandler(ctxDouble)
+                    .then(() => {
+                        expect(ctxDouble.response.status).to.equal(404);
+                    });
+            });
+        });
+
         it('should return hotel photos collection', () => {
             const routeHandler = createHotelPhotosRouteHandler(connectedClientDouble, collectionName);
 
