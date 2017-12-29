@@ -8,7 +8,7 @@ describe('createHotelPhotosRouteHandler', () => {
     const hotelId = 'hotelId';
 
     const ctxDouble = {
-        params: { // (1)
+        params: {
             hotelId
         },
         response: {
@@ -17,7 +17,7 @@ describe('createHotelPhotosRouteHandler', () => {
         }
     };
 
-    const findOneStub = sinon.stub().resolves({ // (1)
+    const findOneStub = sinon.stub().resolves({
         photos: [ 'photo-1.jpg', 'photo-2.jpg', 'photo-3.jpg' ]
     });
     const connectedClientDouble = {
@@ -63,7 +63,7 @@ describe('createHotelPhotosRouteHandler', () => {
 
         context('if hotel entity is not found', () => {
             it('should return 404 status', () => {
-                const connectedClientDoubleWithNoHotelEntity = { // (1)
+                const connectedClientDoubleWithNoHotelEntity = {
                     collection: sinon.stub().returns({
                         findOne: sinon.stub().resolves(null)
                     })
@@ -83,7 +83,7 @@ describe('createHotelPhotosRouteHandler', () => {
         it('should return hotel photos collection', () => {
             const routeHandler = createHotelPhotosRouteHandler(connectedClientDouble, collectionName);
 
-            return routeHandler(ctxDouble) // (2)
+            return routeHandler(ctxDouble)
                 .then(() => {
                     expect(ctxDouble.response.status).to.equal(200);
                     expect(ctxDouble.response.body).to.deep.equal([

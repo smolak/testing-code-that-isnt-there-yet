@@ -8,7 +8,7 @@ export default function createHotelPhotosRouteHandler(dbClient, collectionName) 
                     ctx.response.status = 200;
                     ctx.response.body = hotelEntity.photos;
                 } else {
-                    ctx.response.status = 404; // (2)
+                    ctx.response.status = 404;
                 }
             });
     };
