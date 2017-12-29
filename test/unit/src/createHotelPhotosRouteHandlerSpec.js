@@ -5,21 +5,29 @@ import createHotelPhotosRouteHandler from '../../../src/createHotelPhotosRouteHa
 
 describe('createHotelPhotosRouteHandler', () => {
     const collectionName = 'hotels';
+    const hotelId = 'hotelId';
 
-    const connectedClientDouble = {
-        collection: sinon.spy()
-    };
     const ctxDouble = {
-        response: { // (1)
+        params: { // (1)
+            hotelId
+        },
+        response: {
             status: 0,
             body: ''
         }
     };
+    const findOneSpy = sinon.spy();
+    const connectedClientDouble = {
+        collection: sinon.stub().returns({ // (2)
+            findOne: findOneSpy
+        })
+    };
 
     beforeEach(() => {
-        connectedClientDouble.collection.reset();
+        connectedClientDouble.collection.resetHistory(); // (3)
+        findOneSpy.reset();
 
-        ctxDouble.response.status = 0; // (2)
+        ctxDouble.response.status = 0;
         ctxDouble.response.body = '';
     });
 
@@ -37,6 +45,16 @@ describe('createHotelPhotosRouteHandler', () => {
 
             expect(connectedClientDouble.collection)
                 .to.have.been.calledWithExactly('hotels')
+                .to.have.been.calledOnce;
+        });
+
+        it('should find hotel entry by hotel id passed in params', () => {
+            const routeHandler = createHotelPhotosRouteHandler(connectedClientDouble, collectionName);
+
+            routeHandler(ctxDouble);
+
+            expect(findOneSpy)
+                .to.have.been.calledWithExactly({ hotelId: 'hotelId' })
                 .to.have.been.calledOnce;
         });
 
