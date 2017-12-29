@@ -1,0 +1,28 @@
+{
+  "name": "testing-code-that-isnt-there-yet",
+  "version": "0.0.1",
+  "description": "Repository for blog post",
+  "author": "Jacek Smolak <jacek.smolak@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smolak/testing-code-that-isnt-there-yet.git"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test nyc npm run test:unit && nyc check-coverage",
+    "test:unit": "NODE_ENV=test mocha $(find src test -path '*Spec.js') --opts test/unit/mocha.opts"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "chai": "^3.5.0",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
+    "sinon": "^4.1.2",
+    "sinon-chai": "^2.14.0"
+  }
+}
